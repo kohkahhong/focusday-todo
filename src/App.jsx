@@ -1,5 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
 import './App.css'
+import focusPath from './assets/generated/focus-path.png'
+import timeGarden from './assets/generated/time-garden.png'
+import restingFox from './assets/generated/resting-fox.png'
 
 const STORAGE_KEY = 'focusday-tasks'
 const pad = (n) => String(n).padStart(2, '0')
@@ -100,18 +103,21 @@ function App() {
 
       <main>
         <section className="hero-section">
-          <div>
+          <img className="hero-art" src={focusPath} alt="纸艺森林中通往晨光的专注之路" />
+          <div className="hero-copy">
             <p className="eyebrow"><Icon name="spark" size={15}/> 专注当下，逐一完成</p>
             <h1>今天想完成什么？</h1>
             <p className="subtitle">把重要的事记下来，留出空间给真正重要的生活。</p>
+            <button className="primary-button hero-action" onClick={() => setShowForm(true)}><Icon name="plus" size={19}/> 新建待办</button>
           </div>
-          <button className="primary-button" onClick={() => setShowForm(true)}><Icon name="plus" size={19}/> 新建待办</button>
+          <div className="hero-caption"><span>今日灵感</span><p>完成不是终点，而是让轻盈重新发生。</p></div>
         </section>
 
         <section className="stats-grid">
           <div className="stat-card accent-card"><span className="stat-icon"><Icon name="calendar"/></span><div><span>今日待办</span><strong>{todayTasks}</strong></div></div>
           <div className="stat-card"><span className="stat-icon green"><Icon name="check"/></span><div><span>已完成</span><strong>{completed}</strong></div></div>
           <div className="progress-card">
+            <img className="garden-art" src={timeGarden} alt="象征成长与时间流动的微缩花园" />
             <div className="progress-copy"><div><span>整体进度</span><strong>{progress}%</strong></div><p>{progress === 100 ? '漂亮，全部完成！' : '每完成一件，离目标更近一点'}</p></div>
             <div className="progress-ring" style={{ '--progress': `${progress * 3.6}deg` }}><span>{progress}%</span></div>
           </div>
@@ -126,7 +132,7 @@ function App() {
           </div>
 
           <div className="task-list">
-            {visibleTasks.length === 0 ? <div className="empty"><span><Icon name="list" size={28}/></span><h3>这里暂时空空的</h3><p>新建一项待办，开始充实今天吧。</p></div> : visibleTasks.map(task => {
+            {visibleTasks.length === 0 ? <div className="empty"><img src={restingFox} alt="在完成标记旁安心休息的纸艺小狐狸"/><h3>这里暂时空空的</h3><p>留白也是一天的一部分，或者新建一项待办。</p><button onClick={() => setShowForm(true)}><Icon name="plus" size={16}/> 写下下一件事</button></div> : visibleTasks.map(task => {
               const overdue = !task.done && new Date(`${task.date}T${task.time || '23:59'}`) < new Date()
               return <article className={`task-item ${task.done ? 'is-done' : ''}`} key={task.id}>
                 <button className="check-button" aria-label={task.done ? '标记未完成' : '标记完成'} onClick={() => setTasks(prev => prev.map(t => t.id === task.id ? {...t, done: !t.done} : t))}>{task.done && <Icon name="check" size={15}/>}</button>
